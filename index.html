@@ -3,27 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A complete daily routine for a Muslim Software Engineer — anchored around the five daily prayers with deep work, skill learning, and Sunnah habits." />
-  <title>Muslim Dev Routine · Dhaka</title>
+  <meta name="description" content="A complete daily routine for a Muslim Software Engineer — anchored around the five daily prayers with live times, deep work, skill learning, and Sunnah habits." />
+  <title>Muslim Dev Routine</title>
 
-  <!-- Fonts -->
+  <!-- Fonts: Fraunces (display serif) · Plus Jakarta Sans (body) · JetBrains Mono (time) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
 
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-  <!-- Styles -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Background decoration -->
   <div class="bg-dots" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
-
-  <!-- Scroll progress -->
   <div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
 
   <!-- ═══ HEADER ═══ -->
@@ -31,33 +27,23 @@
     <div class="wrap header-wrap">
       <a class="brand" href="#" aria-label="Muslim Dev Routine">
         <span class="brand-moon" aria-hidden="true">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
           </svg>
         </span>
-        <div>
-          <span class="brand-name">Muslim Dev</span>
-          <span class="brand-tagline">Daily Routine · Dhaka</span>
-        </div>
+        <span class="brand-text">
+          <span class="brand-name">Muslim Dev Routine</span>
+          <span class="brand-tagline">Anchored on Salah</span>
+        </span>
       </a>
-
-      <div class="header-clock" aria-live="polite">
+      <div class="header-clock" aria-live="off">
         <div class="clock-time" id="clockTime">--:--:--</div>
         <div class="clock-date" id="clockDate">Loading…</div>
       </div>
     </div>
   </header>
 
-  <!-- ═══ PRAYER STRIP ═══ -->
-  <aside class="prayer-strip" aria-label="Today's prayer times">
-    <div class="wrap prayer-wrap">
-      <span class="prayer-label" aria-hidden="true">Salah</span>
-      <div class="prayer-pills" id="prayerPills" role="list"></div>
-      <div class="prayer-next" id="prayerNext" aria-live="polite"></div>
-    </div>
-  </aside>
-
-  <!-- ═══ LOCATION + MADHAB CONTROLS ═══ -->
+  <!-- ═══ CONTROLS ═══ -->
   <div class="controls-bar">
     <div class="wrap controls-wrap">
       <div class="control-group">
@@ -74,15 +60,13 @@
           <option value="mymensingh">Mymensingh</option>
         </select>
       </div>
-
       <div class="control-group">
-        <span class="control-label"><i class="fas fa-book-quran" aria-hidden="true"></i> Asr (Madhab)</span>
+        <span class="control-label"><i class="fas fa-book-quran" aria-hidden="true"></i> Asr</span>
         <div class="madhab-toggle" role="tablist" aria-label="Asr calculation method">
           <button class="madhab-btn active" data-school="1" role="tab" aria-selected="true">Hanafi</button>
           <button class="madhab-btn" data-school="0" role="tab" aria-selected="false">Standard</button>
         </div>
       </div>
-
       <div class="live-banner" id="liveBanner">Loading…</div>
     </div>
   </div>
@@ -93,18 +77,38 @@
 
       <!-- Hero -->
       <section class="hero" aria-labelledby="heroTitle">
-        <h1 class="hero-title" id="heroTitle">A day built on Salah</h1>
+        <h1 class="hero-title" id="heroTitle">A day built on <em>Salah</em></h1>
         <p class="hero-sub">Five prayers as anchors. Deep work in the barakah hours. Skill learning after Asr. Rest as Sunnah.</p>
       </section>
 
+      <!-- ═══ NEXT-PRAYER COUNTDOWN ═══ -->
+      <section class="countdown" id="countdown" aria-label="Countdown to next prayer">
+        <div class="cd-top">
+          <span class="cd-kicker">Next prayer</span>
+          <span class="cd-target" id="cdTarget">—</span>
+        </div>
+        <div class="cd-name" id="cdName">—</div>
+        <div class="cd-timer" id="cdTimer" role="timer" aria-live="off">
+          <span class="cd-unit"><span class="cd-num" id="cdH">00</span><span class="cd-lab">hrs</span></span>
+          <span class="cd-colon">:</span>
+          <span class="cd-unit"><span class="cd-num" id="cdM">00</span><span class="cd-lab">min</span></span>
+          <span class="cd-colon">:</span>
+          <span class="cd-unit"><span class="cd-num" id="cdS">00</span><span class="cd-lab">sec</span></span>
+        </div>
+        <div class="cd-track" aria-hidden="true"><div class="cd-fill" id="cdFill"></div></div>
+      </section>
+
+      <!-- Prayer pills row -->
+      <div class="prayer-row" role="list" aria-label="Today's prayer times" id="prayerPills"></div>
+
       <!-- Now card -->
-      <div class="now-card" id="nowCard" aria-live="polite" aria-label="Current activity"></div>
+      <div class="now-card" id="nowCard" aria-live="off" aria-label="Current activity"></div>
 
       <!-- Day progress -->
       <div class="progress-row" role="group" aria-label="Day progress">
         <div class="progress-meta">
           <span id="progressLabel">Day progress</span>
-          <span class="progress-pct" id="progressPct" aria-live="polite">0%</span>
+          <span class="progress-pct" id="progressPct">0%</span>
         </div>
         <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
           <div class="progress-fill" id="progressFill"></div>
@@ -114,31 +118,12 @@
       <!-- Filter bar -->
       <nav class="filters" aria-label="Filter by category" role="tablist">
         <button class="filter active" data-cat="all" role="tab" aria-selected="true">All</button>
-        <button class="filter" data-cat="s" role="tab" aria-selected="false">
-          <span class="fdot fdot-s"></span>Prayer
-        </button>
-        <button class="filter" data-cat="w" role="tab" aria-selected="false">
-          <span class="fdot fdot-w"></span>Work
-        </button>
-        <button class="filter" data-cat="l" role="tab" aria-selected="false">
-          <span class="fdot fdot-l"></span>Learning
-        </button>
-        <button class="filter" data-cat="h" role="tab" aria-selected="false">
-          <span class="fdot fdot-h"></span>Wellness
-        </button>
-        <button class="filter" data-cat="f" role="tab" aria-selected="false">
-          <span class="fdot fdot-f"></span>Personal
-        </button>
+        <button class="filter" data-cat="s" role="tab" aria-selected="false"><span class="fdot fdot-s"></span>Prayer</button>
+        <button class="filter" data-cat="w" role="tab" aria-selected="false"><span class="fdot fdot-w"></span>Work</button>
+        <button class="filter" data-cat="l" role="tab" aria-selected="false"><span class="fdot fdot-l"></span>Learning</button>
+        <button class="filter" data-cat="h" role="tab" aria-selected="false"><span class="fdot fdot-h"></span>Wellness</button>
+        <button class="filter" data-cat="f" role="tab" aria-selected="false"><span class="fdot fdot-f"></span>Personal</button>
       </nav>
-
-      <!-- Legend -->
-      <div class="legend" aria-label="Color legend">
-        <span class="legend-item"><span class="ld ld-s"></span>Prayer</span>
-        <span class="legend-item"><span class="ld ld-w"></span>Deep work</span>
-        <span class="legend-item"><span class="ld ld-l"></span>Skill learning</span>
-        <span class="legend-item"><span class="ld ld-h"></span>Wellness</span>
-        <span class="legend-item"><span class="ld ld-f"></span>Personal</span>
-      </div>
 
       <!-- Timeline -->
       <section aria-label="Daily schedule">
@@ -149,7 +134,7 @@
       <section class="extra-section" aria-labelledby="weekTitle">
         <div class="extra-header">
           <h2 id="weekTitle">Weekly skill rotation</h2>
-          <span class="extra-sub">Post-Asr · 3:35 PM every day</span>
+          <span class="extra-sub">Post-Asr · every day</span>
         </div>
         <div class="week-grid" id="weekGrid"></div>
       </section>
@@ -162,27 +147,23 @@
         </div>
         <div class="habit-flow">
           <div class="habit-card">
-            <span class="habit-icon hc-gold"><i class="fas fa-broadcast-tower" aria-hidden="true"></i></span>
-            <span class="habit-step">Cue</span>
-            <span class="habit-desc">Adhan sounds</span>
+            <span class="habit-icon hc-gold"><i class="fas fa-tower-broadcast" aria-hidden="true"></i></span>
+            <span class="habit-step">Cue</span><span class="habit-desc">Adhan sounds</span>
           </div>
           <span class="habit-arrow" aria-hidden="true">→</span>
           <div class="habit-card">
             <span class="habit-icon hc-green"><i class="fas fa-mosque" aria-hidden="true"></i></span>
-            <span class="habit-step">Routine</span>
-            <span class="habit-desc">Wudu + Salah</span>
+            <span class="habit-step">Routine</span><span class="habit-desc">Wudu + Salah</span>
           </div>
           <span class="habit-arrow" aria-hidden="true">→</span>
           <div class="habit-card">
             <span class="habit-icon hc-amber"><i class="fas fa-star" aria-hidden="true"></i></span>
-            <span class="habit-step">Reward</span>
-            <span class="habit-desc">Clarity + barakah</span>
+            <span class="habit-step">Reward</span><span class="habit-desc">Clarity + barakah</span>
           </div>
           <span class="habit-arrow" aria-hidden="true">→</span>
           <div class="habit-card">
             <span class="habit-icon hc-purple"><i class="fas fa-code" aria-hidden="true"></i></span>
-            <span class="habit-step">Next block</span>
-            <span class="habit-desc">Focused work</span>
+            <span class="habit-step">Next block</span><span class="habit-desc">Focused work</span>
           </div>
         </div>
         <blockquote class="habit-quote">
@@ -191,19 +172,18 @@
         </blockquote>
       </section>
 
-      <!-- Seasonal note -->
+      <!-- Info note -->
       <div class="info-note" role="note">
         <i class="fas fa-circle-info" aria-hidden="true"></i>
         <div>
-          <strong>Live &amp; location-aware:</strong> Prayer times are fetched for today and your
-          chosen location via the Aladhan API (Karachi calculation method). The Fajr, Dhuhr, Asr,
-          Maghrib and Isha blocks — plus wake-up and post-prayer blocks — shift automatically with
-          the real times, so the routine stays accurate across seasons and cities.
-          Asr differs by madhab; toggle Hanafi/Standard above to match your local mosque.
+          <strong>Live &amp; location-aware.</strong> Prayer times are fetched for today and your chosen
+          location via the Aladhan API (Karachi method). Prayer blocks plus wake-up and post-prayer blocks
+          shift automatically with the real times, so the routine stays accurate across seasons and cities.
+          Asr differs by madhab — toggle Hanafi / Standard above to match your local mosque.
         </div>
       </div>
 
-    </div><!-- /main-wrap -->
+    </div>
   </main>
 
   <!-- ═══ FOOTER ═══ -->

@@ -230,6 +230,18 @@ function minToStr(min){
 }
 function curMin(){ const n=new Date(); return n.getHours()*60+n.getMinutes(); }
 
+/* Parse Aladhan time which may be "18:46", "18:46 (+06)", or "06:46 PM" */
+function parseApiTime(raw){
+  if(!raw) return 0;
+  let str=String(raw).trim();
+  const ampm=/(AM|PM)/i.exec(str);
+  str=str.replace(/\s*\([^)]*\)/,'').replace(/\s*(AM|PM)/i,'').trim();
+  const [hStr,mStr]=str.split(':');
+  let h=parseInt(hStr,10)||0; const m=parseInt(mStr,10)||0;
+  if(ampm){ const ap=ampm[1].toUpperCase(); if(ap==='PM'&&h!==12)h+=12; if(ap==='AM'&&h===12)h=0; }
+  return h*60+m;
+}
+
 function getCurrentBlock(){
   const cm=curMin(); let cur=null;
   const sorted=[...SCHEDULE].sort((a,b)=>toMin(a.time)-toMin(b.time));
@@ -243,6 +255,26 @@ function getNextPrayer(){
 }
 function fmtCountdown(d){ if(d<0)d+=1440; const h=Math.floor(d/60),m=d%60; return h>0?`${h}h ${m}m`:`${m}m`; }
 
+/* Next prayer as a real Date (handles wrap to tomorrow's Fajr) */
+function getNextPrayerDate(){
+  const now=new Date();
+  for(const p of PRAYERS){
+    const d=new Date(now);
+    d.setHours(Math.floor(p.min/60), p.min%60, 0, 0);
+    if(d>now) return { p, d, prev:prevPrayerMin(p) };
+  }
+  const f=PRAYERS[0];
+  const d=new Date(now); d.setDate(d.getDate()+1);
+  d.setHours(Math.floor(f.min/60), f.min%60, 0, 0);
+  return { p:f, d, prev:PRAYERS[PRAYERS.length-1].min };
+}
+/* Minutes of the prayer before the given one (for progress ring) */
+function prevPrayerMin(target){
+  const idx=PRAYERS.indexOf(target);
+  if(idx<=0) return PRAYERS[PRAYERS.length-1].min - 1440; /* yesterday Isha */
+  return PRAYERS[idx-1].min;
+}
+
 /* ─── Aladhan API: fetch live prayer times ───────────────── */
 async function fetchPrayerTimes(){
   const banner=document.getElementById('liveBanner');
@@ -253,11 +285,10 @@ async function fetchPrayerTimes(){
     const res=await fetch(url);
     if(!res.ok) throw new Error('API '+res.status);
     const json=await res.json();
-    const t=json.data.timings;       /* { Fajr:"03:44", Dhuhr:"11:59", ... } 24h */
+    const t=json.data.timings;       /* { Fajr:"03:44", Dhuhr:"11:59", ... } */
     const order=['Fajr','Dhuhr','Asr','Maghrib','Isha'];
     PRAYERS=order.map(name=>{
-      const [h,m]=t[name].split(':').map(Number);
-      const min=h*60+m;
+      const min=parseApiTime(t[name]);
       return { name, min, time:minToStr(min) };
     });
     /* Push live times into SCHEDULE prayer blocks */
@@ -325,15 +356,45 @@ function useMyLocation(){
 /* ─── Renders ────────────────────────────────────────────── */
 function renderPrayers(){
   const pillsEl=document.getElementById('prayerPills');
-  const nextEl=document.getElementById('prayerNext');
   if(!pillsEl) return;
-  const next=getNextPrayer(), cm=curMin();
+  const next=getNextPrayer();
+  const icons={Fajr:'fa-cloud-sun',Dhuhr:'fa-sun',Asr:'fa-cloud-sun',Maghrib:'fa-cloud-moon',Isha:'fa-moon'};
   pillsEl.innerHTML=PRAYERS.map(p=>`
     <div class="ppill${p===next?' active':''}" role="listitem" title="${p.name}: ${p.time}">
+      <i class="fas ${icons[p.name]||'fa-mosque'} ppill-icon" aria-hidden="true"></i>
       <span class="ppill-name">${p.name}</span>
       <span class="ppill-time">${p.time}</span>
     </div>`).join('');
-  if(nextEl){ let d=next.min-cm; if(d<0)d+=1440; nextEl.innerHTML=`Next: <strong>${next.name}</strong> in ${fmtCountdown(d)}`; }
+}
+
+/* Live second-precision countdown to next prayer */
+function tickCountdown(){
+  const nameEl=document.getElementById('cdName');
+  const tgtEl=document.getElementById('cdTarget');
+  const hEl=document.getElementById('cdH'), mEl=document.getElementById('cdM'), sEl=document.getElementById('cdS');
+  const fillEl=document.getElementById('cdFill');
+  if(!nameEl) return;
+  const { p, d, prev }=getNextPrayerDate();
+  const now=new Date();
+  let ms=d-now; if(ms<0) ms=0;
+  const total=Math.floor(ms/1000);
+  const h=Math.floor(total/3600), m=Math.floor((total%3600)/60), s=total%60;
+
+  nameEl.textContent=p.name;
+  tgtEl.textContent=`at ${p.time}`;
+  if(hEl) hEl.textContent=String(h).padStart(2,'0');
+  if(mEl) mEl.textContent=String(m).padStart(2,'0');
+  if(sEl) sEl.textContent=String(s).padStart(2,'0');
+
+  /* progress fill: how far between previous prayer and next */
+  if(fillEl){
+    const cm=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+    let prevMin=prev, nextMin=p.min;
+    if(nextMin<=prevMin) nextMin+=1440;
+    let cur=cm; if(cur<prevMin) cur+=1440;
+    const pct=Math.max(0,Math.min(100,((cur-prevMin)/(nextMin-prevMin))*100));
+    fillEl.style.width=`${pct}%`;
+  }
 }
 
 function renderNowCard(){
@@ -437,7 +498,7 @@ function updateScrollBar(){
   bar.style.width=`${total>0?(window.scrollY/total)*100:0}%`;
 }
 
-function rerenderAll(){ renderTimeline(); renderPrayers(); renderNowCard(); updateProgress(); }
+function rerenderAll(){ renderTimeline(); renderPrayers(); renderNowCard(); updateProgress(); tickCountdown(); }
 
 /* ─── Controls ───────────────────────────────────────────── */
 function initControls(){
@@ -479,11 +540,15 @@ document.addEventListener('DOMContentLoaded',()=>{
   renderWeekGrid();
   rerenderAll();
   updateClock();
+  tickCountdown();
   initControls();
   initFilters();
   fetchPrayerTimes();              /* live times on load */
 
-  setInterval(updateClock,1000);
+  /* Per-second: clock + live countdown */
+  setInterval(()=>{ updateClock(); tickCountdown(); },1000);
+
+  /* Per-minute: pills, now card, progress, current-block highlight */
   setInterval(()=>{ renderPrayers(); renderNowCard(); updateProgress();
     document.querySelectorAll('.block').forEach(el=>el.classList.remove('is-now'));
     document.querySelectorAll('.blk-now-badge').forEach(b=>b.remove());

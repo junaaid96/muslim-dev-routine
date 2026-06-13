@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A complete daily routine for a Muslim Software Engineer — anchored around the five daily prayers with deep work, skill learning, and Sunnah habits." />
+  <title>Muslim Dev Routine · Dhaka</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background decoration -->
+  <div class="bg-dots" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- Scroll progress -->
+  <div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
+
+  <!-- ═══ HEADER ═══ -->
+  <header class="header">
+    <div class="wrap header-wrap">
+      <a class="brand" href="#" aria-label="Muslim Dev Routine">
+        <span class="brand-moon" aria-hidden="true">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+          </svg>
+        </span>
+        <div>
+          <span class="brand-name">Muslim Dev</span>
+          <span class="brand-tagline">Daily Routine · Dhaka</span>
+        </div>
+      </a>
+
+      <div class="header-clock" aria-live="polite">
+        <div class="clock-time" id="clockTime">--:--:--</div>
+        <div class="clock-date" id="clockDate">Loading…</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══ PRAYER STRIP ═══ -->
+  <aside class="prayer-strip" aria-label="Today's prayer times in Dhaka">
+    <div class="wrap prayer-wrap">
+      <span class="prayer-label" aria-hidden="true">Salah</span>
+      <div class="prayer-pills" id="prayerPills" role="list"></div>
+      <div class="prayer-next" id="prayerNext" aria-live="polite"></div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main>
+    <div class="wrap main-wrap">
+
+      <!-- Hero -->
+      <section class="hero" aria-labelledby="heroTitle">
+        <h1 class="hero-title" id="heroTitle">A day built on Salah</h1>
+        <p class="hero-sub">Five prayers as anchors. Deep work in the barakah hours. Skill learning after Asr. Rest as Sunnah.</p>
+      </section>
+
+      <!-- Now card -->
+      <div class="now-card" id="nowCard" aria-live="polite" aria-label="Current activity"></div>
+
+      <!-- Day progress -->
+      <div class="progress-row" role="group" aria-label="Day progress">
+        <div class="progress-meta">
+          <span id="progressLabel">Day progress</span>
+          <span class="progress-pct" id="progressPct" aria-live="polite">0%</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="progressTrack">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <!-- Filter bar -->
+      <nav class="filters" aria-label="Filter by category" role="tablist">
+        <button class="filter active" data-cat="all" role="tab" aria-selected="true">All</button>
+        <button class="filter" data-cat="s" role="tab" aria-selected="false">
+          <span class="fdot fdot-s"></span>Prayer
+        </button>
+        <button class="filter" data-cat="w" role="tab" aria-selected="false">
+          <span class="fdot fdot-w"></span>Work
+        </button>
+        <button class="filter" data-cat="l" role="tab" aria-selected="false">
+          <span class="fdot fdot-l"></span>Learning
+        </button>
+        <button class="filter" data-cat="h" role="tab" aria-selected="false">
+          <span class="fdot fdot-h"></span>Wellness
+        </button>
+        <button class="filter" data-cat="f" role="tab" aria-selected="false">
+          <span class="fdot fdot-f"></span>Personal
+        </button>
+      </nav>
+
+      <!-- Legend -->
+      <div class="legend" aria-label="Color legend">
+        <span class="legend-item"><span class="ld ld-s"></span>Prayer</span>
+        <span class="legend-item"><span class="ld ld-w"></span>Deep work</span>
+        <span class="legend-item"><span class="ld ld-l"></span>Skill learning</span>
+        <span class="legend-item"><span class="ld ld-h"></span>Wellness</span>
+        <span class="legend-item"><span class="ld ld-f"></span>Personal</span>
+      </div>
+
+      <!-- Timeline -->
+      <section aria-label="Daily schedule">
+        <div class="timeline" id="timeline" role="list"></div>
+      </section>
+
+      <!-- Weekly rotation -->
+      <section class="extra-section" aria-labelledby="weekTitle">
+        <div class="extra-header">
+          <h2 id="weekTitle">Weekly skill rotation</h2>
+          <span class="extra-sub">Post-Asr · 3:35 PM every day</span>
+        </div>
+        <div class="week-grid" id="weekGrid"></div>
+      </section>
+
+      <!-- Habit loop -->
+      <section class="extra-section" aria-labelledby="habitTitle">
+        <div class="extra-header">
+          <h2 id="habitTitle">The habit loop</h2>
+          <span class="extra-sub">How Salah structures the whole day</span>
+        </div>
+        <div class="habit-flow">
+          <div class="habit-card">
+            <span class="habit-icon hc-gold"><i class="fas fa-broadcast-tower" aria-hidden="true"></i></span>
+            <span class="habit-step">Cue</span>
+            <span class="habit-desc">Adhan sounds</span>
+          </div>
+          <span class="habit-arrow" aria-hidden="true">→</span>
+          <div class="habit-card">
+            <span class="habit-icon hc-green"><i class="fas fa-mosque" aria-hidden="true"></i></span>
+            <span class="habit-step">Routine</span>
+            <span class="habit-desc">Wudu + Salah</span>
+          </div>
+          <span class="habit-arrow" aria-hidden="true">→</span>
+          <div class="habit-card">
+            <span class="habit-icon hc-amber"><i class="fas fa-star" aria-hidden="true"></i></span>
+            <span class="habit-step">Reward</span>
+            <span class="habit-desc">Clarity + barakah</span>
+          </div>
+          <span class="habit-arrow" aria-hidden="true">→</span>
+          <div class="habit-card">
+            <span class="habit-icon hc-purple"><i class="fas fa-code" aria-hidden="true"></i></span>
+            <span class="habit-step">Next block</span>
+            <span class="habit-desc">Focused work</span>
+          </div>
+        </div>
+        <blockquote class="habit-quote">
+          Each prayer anchors the activity that follows it. Once Salah is consistent,
+          the entire day becomes self-organizing. <em>The schedule runs itself.</em>
+        </blockquote>
+      </section>
+
+      <!-- Seasonal note -->
+      <div class="info-note" role="note">
+        <i class="fas fa-circle-info" aria-hidden="true"></i>
+        <div>
+          <strong>Seasonal note:</strong> Prayer times shift significantly in Bangladesh.
+          Winter Fajr is around 5:15 AM — you gain ~1.5 hours of extra sleep automatically.
+          The structure stays identical; only the clock times move.
+          Verify daily at <a href="https://www.islamicfinder.org/world/bangladesh/1185241/dhaka-prayer-times/" target="_blank" rel="noopener">IslamicFinder</a>.
+        </div>
+      </div>
+
+    </div><!-- /main-wrap -->
+  </main>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer class="footer">
+    <div class="wrap footer-wrap">
+      <p class="footer-brand"><span aria-hidden="true">☽</span> Muslim Dev Routine</p>
+      <blockquote class="footer-hadith">
+        "Take benefit of five before five: your youth, your health, your wealth,
+        your free time, and your life before your death."
+        <cite>— Prophet Muhammad ﷺ</cite>
+      </blockquote>
+      <p class="footer-note">Built for a Muslim Software Engineer in Dhaka, Bangladesh · Aligned with Quran &amp; Sunnah</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

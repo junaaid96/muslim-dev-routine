@@ -4,17 +4,19 @@ A complete daily routine website for a Muslim Software Engineer in Dhaka, Bangla
 
 ## ✨ Features
 
+- **Live prayer times** — fetched for *today* and *your location* via the [Aladhan API](https://aladhan.com/prayer-times-api) (Karachi calculation method, the standard for Bangladesh)
+- **Location-aware** — pick any Bangladesh city, or tap "Use my location" for GPS-based times (Dhaka, Chittagong, Sylhet, etc. all differ)
+- **Madhab toggle** — switch Asr calculation between Hanafi and Standard (Shafi/Maliki/Hanbali)
+- **Self-adjusting routine** — Fajr/Dhuhr/Asr/Maghrib/Isha blocks, plus wake-up and post-prayer blocks, shift automatically with the real times and re-sort by clock order across seasons
 - **Live clock** — real-time display in the header
-- **Prayer strip** — today's Dhaka prayer times with live countdown to next Salah
-- **"NOW" card** — prominently shows the current active block and next prayer
-- **Day progress bar** — visual indicator of how far through the 24-hour schedule you are
-- **Scroll progress bar** — thin colored line at the top of the viewport
-- **Interactive timeline** — 20 schedule blocks, click any to expand tips with smooth animation
-- **Category filter** — filter by Prayer / Work / Learning / Wellness / Personal
-- **Weekly skill rotation** — structured 7-day learning plan for post-Asr
+- **"NOW" card** — shows the current active block and live countdown to the next Salah
+- **Day progress bar** + **scroll progress bar**
+- **Interactive timeline** — 20 blocks, click any to expand tips with smooth animation
+- **Category filter** — Prayer / Work / Learning / Wellness / Personal
+- **Weekly skill rotation** — structured 7-day post-Asr learning plan
 - **Habit loop visualization** — Adhan → Wudu + Salah → Barakah → Focused work
-- **Responsive** — works cleanly on mobile, tablet, and desktop
-- **Accessible** — ARIA roles, keyboard navigation, focus styles
+- **Responsive + accessible** — ARIA roles, keyboard navigation, focus styles
+- **Graceful fallback** — if offline or the API fails, approximate times are shown with a warning badge
 
 ## 🗂️ File structure
 

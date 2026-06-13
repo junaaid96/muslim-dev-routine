@@ -49,13 +49,43 @@
   </header>
 
   <!-- ═══ PRAYER STRIP ═══ -->
-  <aside class="prayer-strip" aria-label="Today's prayer times in Dhaka">
+  <aside class="prayer-strip" aria-label="Today's prayer times">
     <div class="wrap prayer-wrap">
       <span class="prayer-label" aria-hidden="true">Salah</span>
       <div class="prayer-pills" id="prayerPills" role="list"></div>
       <div class="prayer-next" id="prayerNext" aria-live="polite"></div>
     </div>
   </aside>
+
+  <!-- ═══ LOCATION + MADHAB CONTROLS ═══ -->
+  <div class="controls-bar">
+    <div class="wrap controls-wrap">
+      <div class="control-group">
+        <label class="control-label" for="citySelect"><i class="fas fa-location-dot" aria-hidden="true"></i> Location</label>
+        <select id="citySelect" class="control-select" aria-label="Choose city">
+          <option value="__geo">📍 Use my location</option>
+          <option value="dhaka" selected>Dhaka</option>
+          <option value="chittagong">Chittagong</option>
+          <option value="sylhet">Sylhet</option>
+          <option value="rajshahi">Rajshahi</option>
+          <option value="khulna">Khulna</option>
+          <option value="rangpur">Rangpur</option>
+          <option value="barisal">Barisal</option>
+          <option value="mymensingh">Mymensingh</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label"><i class="fas fa-book-quran" aria-hidden="true"></i> Asr (Madhab)</span>
+        <div class="madhab-toggle" role="tablist" aria-label="Asr calculation method">
+          <button class="madhab-btn active" data-school="1" role="tab" aria-selected="true">Hanafi</button>
+          <button class="madhab-btn" data-school="0" role="tab" aria-selected="false">Standard</button>
+        </div>
+      </div>
+
+      <div class="live-banner" id="liveBanner">Loading…</div>
+    </div>
+  </div>
 
   <!-- ═══ MAIN ═══ -->
   <main>
@@ -165,10 +195,11 @@
       <div class="info-note" role="note">
         <i class="fas fa-circle-info" aria-hidden="true"></i>
         <div>
-          <strong>Seasonal note:</strong> Prayer times shift significantly in Bangladesh.
-          Winter Fajr is around 5:15 AM — you gain ~1.5 hours of extra sleep automatically.
-          The structure stays identical; only the clock times move.
-          Verify daily at <a href="https://www.islamicfinder.org/world/bangladesh/1185241/dhaka-prayer-times/" target="_blank" rel="noopener">IslamicFinder</a>.
+          <strong>Live &amp; location-aware:</strong> Prayer times are fetched for today and your
+          chosen location via the Aladhan API (Karachi calculation method). The Fajr, Dhuhr, Asr,
+          Maghrib and Isha blocks — plus wake-up and post-prayer blocks — shift automatically with
+          the real times, so the routine stays accurate across seasons and cities.
+          Asr differs by madhab; toggle Hanafi/Standard above to match your local mosque.
         </div>
       </div>
 

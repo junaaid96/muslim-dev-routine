@@ -198,6 +198,50 @@ blockquote { font-style: normal; }
 }
 .prayer-next strong { color: var(--gold); }
 
+/* ─── CONTROLS BAR ───────────────────────────────────────── */
+.controls-bar {
+  background: var(--bg); border-bottom: 1px solid var(--bdr);
+  position: relative; z-index: 150;
+}
+.controls-wrap {
+  display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+  padding-top: .6rem; padding-bottom: .6rem;
+}
+.control-group { display: flex; align-items: center; gap: .5rem; }
+.control-label {
+  font-family: var(--ff-m); font-size: .62rem;
+  letter-spacing: .05em; color: var(--t3); white-space: nowrap;
+}
+.control-label i { margin-right: 2px; }
+.control-select {
+  background: var(--s2); color: var(--t1);
+  border: 1px solid var(--bdr); border-radius: 7px;
+  padding: .3rem .6rem; font-family: var(--ff-b); font-size: .78rem;
+  cursor: pointer; transition: border-color .18s;
+}
+.control-select:hover { border-color: var(--bdrh); }
+.control-select:focus { outline: none; border-color: var(--cs-b); }
+
+.madhab-toggle {
+  display: inline-flex; background: var(--s1);
+  border: 1px solid var(--bdr); border-radius: 7px; overflow: hidden;
+}
+.madhab-btn {
+  padding: .3rem .7rem; font-family: var(--ff-b); font-size: .74rem;
+  color: var(--t2); transition: all .18s; white-space: nowrap;
+}
+.madhab-btn:hover { color: var(--t1); }
+.madhab-btn.active { background: var(--cs-a); color: var(--cs); }
+
+.live-banner {
+  margin-left: auto;
+  font-family: var(--ff-m); font-size: .66rem;
+  color: var(--t3); display: flex; align-items: center; gap: 5px;
+  white-space: nowrap;
+}
+.live-banner.ok   { color: var(--cs); }
+.live-banner.warn { color: var(--ch); }
+
 /* ─── MAIN ───────────────────────────────────────────────── */
 .main-wrap { padding-top: 2.75rem; padding-bottom: 5rem; position: relative; z-index: 1; }
 
@@ -596,6 +640,8 @@ blockquote { font-style: normal; }
   .prayer-wrap  { gap: .5rem; }
   .prayer-label { display: none; }
   .prayer-next  { display: none; }
+  .controls-wrap { gap: .75rem; }
+  .live-banner { margin-left: 0; width: 100%; order: 3; }
   .timeline::before { left: 60px; }
   .blk-time  { width: 54px; }
   .blk-badge { display: none; }

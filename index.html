@@ -20,12 +20,13 @@
 
   <div class="bg-dots" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-glow-bottom" aria-hidden="true"></div>
   <div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
 
   <!-- ═══ HEADER ═══ -->
   <header class="header">
     <div class="wrap header-wrap">
-      <a class="brand" href="#" aria-label="Muslim Dev Routine">
+      <a class="brand" href="index.html" aria-label="Muslim Dev Routine">
         <span class="brand-moon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
@@ -36,6 +37,10 @@
           <span class="brand-tagline">Anchored on Salah</span>
         </span>
       </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a class="nav-link active" href="index.html" aria-current="page">Routine</a>
+        <a class="nav-link" href="practice.html">Practice</a>
+      </nav>
       <div class="header-clock" aria-live="off">
         <div class="clock-time" id="clockTime">--:--:--</div>
         <div class="clock-date" id="clockDate">Loading…</div>
@@ -115,18 +120,16 @@
         </div>
       </div>
 
-      <!-- Filter bar -->
-      <nav class="filters" aria-label="Filter by category" role="tablist">
-        <button class="filter active" data-cat="all" role="tab" aria-selected="true">All</button>
-        <button class="filter" data-cat="s" role="tab" aria-selected="false"><span class="fdot fdot-s"></span>Prayer</button>
-        <button class="filter" data-cat="w" role="tab" aria-selected="false"><span class="fdot fdot-w"></span>Work</button>
-        <button class="filter" data-cat="l" role="tab" aria-selected="false"><span class="fdot fdot-l"></span>Learning</button>
-        <button class="filter" data-cat="h" role="tab" aria-selected="false"><span class="fdot fdot-h"></span>Wellness</button>
-        <button class="filter" data-cat="f" role="tab" aria-selected="false"><span class="fdot fdot-f"></span>Personal</button>
-      </nav>
-
-      <!-- Timeline -->
-      <section aria-label="Daily schedule">
+      <!-- Filter bar + Timeline -->
+      <section class="schedule-section" aria-label="Daily schedule">
+        <nav class="filters" aria-label="Filter by category" role="tablist">
+          <button class="filter active" data-cat="all" role="tab" aria-selected="true">All</button>
+          <button class="filter" data-cat="s" role="tab" aria-selected="false"><span class="fdot fdot-s"></span>Prayer</button>
+          <button class="filter" data-cat="w" role="tab" aria-selected="false"><span class="fdot fdot-w"></span>Work</button>
+          <button class="filter" data-cat="l" role="tab" aria-selected="false"><span class="fdot fdot-l"></span>Learning</button>
+          <button class="filter" data-cat="h" role="tab" aria-selected="false"><span class="fdot fdot-h"></span>Wellness</button>
+          <button class="filter" data-cat="f" role="tab" aria-selected="false"><span class="fdot fdot-f"></span>Personal</button>
+        </nav>
         <div class="timeline" id="timeline" role="list"></div>
       </section>
 
@@ -187,6 +190,17 @@
         </blockquote>
       </section>
 
+      <!-- Practice teaser (new interactive tools) -->
+      <aside class="practice-teaser" aria-labelledby="practiceTeaserTitle">
+        <div class="practice-teaser-copy">
+          <h2 id="practiceTeaserTitle">Daily practice tools</h2>
+          <p>Salah &amp; Sunnah checklist, muhasabah notes, water tracker, streak, and a focus timer — private to this browser.</p>
+        </div>
+        <a class="practice-teaser-cta" href="practice.html">
+          Open Practice <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </a>
+      </aside>
+
       <!-- Info note -->
       <div class="info-note" role="note">
         <i class="fas fa-circle-info" aria-hidden="true"></i>
@@ -211,6 +225,7 @@
         <cite>— Prophet Muhammad ﷺ</cite>
       </blockquote>
       <p class="footer-note">Built for a Muslim Software Engineer in Dhaka, Bangladesh · Aligned with Quran &amp; Sunnah</p>
+      <p class="footer-by">Developed by <a href="https://www.junaidul.pro.bd" target="_blank" rel="noopener noreferrer">Md. Junaidul Islam</a></p>
     </div>
   </footer>
 

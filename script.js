@@ -644,6 +644,13 @@ function updateScrollBar(){
   bar.style.width=`${total>0?(window.scrollY/total)*100:0}%`;
 }
 
+function syncStickyOffsets(){
+  const header=document.querySelector('.header');
+  const controls=document.querySelector('.controls-bar');
+  if(header) document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`);
+  if(controls) document.documentElement.style.setProperty('--controls-h', `${controls.offsetHeight}px`);
+}
+
 function rerenderAll(){ renderTimeline(); renderPrayers(); renderNowCard(); updateProgress(); tickCountdown(); }
 
 /* ─── Controls ───────────────────────────────────────────── */
@@ -693,6 +700,7 @@ document.addEventListener('DOMContentLoaded',()=>{
   tickCountdown();
   initControls();
   initFilters();
+  syncStickyOffsets();
   fetchPrayerTimes();              /* live times on load */
 
   /* Per-second: clock + live countdown */
@@ -716,4 +724,5 @@ document.addEventListener('DOMContentLoaded',()=>{
   setInterval(fetchPrayerTimes, 60*60*1000);
 
   window.addEventListener('scroll',updateScrollBar,{passive:true});
+  window.addEventListener('resize',syncStickyOffsets,{passive:true});
 });

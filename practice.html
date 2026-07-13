@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Interactive daily practice — Salah checklist, Sunnah & health habits, muhasabah notes, and a focus timer for the Muslim Dev Routine." />
+  <title>Practice · Muslim Dev Routine</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="practice-page">
+
+  <div class="bg-dots" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+  <div class="bg-glow-bottom" aria-hidden="true"></div>
+  <div class="scroll-bar" id="scrollBar" aria-hidden="true"></div>
+
+  <header class="header">
+    <div class="wrap header-wrap">
+      <a class="brand" href="index.html" aria-label="Muslim Dev Routine">
+        <span class="brand-moon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="brand-text">
+          <span class="brand-name">Muslim Dev Routine</span>
+          <span class="brand-tagline">Anchored on Salah</span>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Primary">
+        <a class="nav-link" href="index.html">Routine</a>
+        <a class="nav-link active" href="practice.html" aria-current="page">Practice</a>
+      </nav>
+      <div class="header-clock" aria-live="off">
+        <div class="clock-time" id="clockTime">--:--:--</div>
+        <div class="clock-date" id="clockDate">Loading…</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap main-wrap practice-wrap">
+
+      <section class="hero practice-hero" aria-labelledby="practiceTitle">
+        <h1 class="hero-title" id="practiceTitle">Today’s <em>practice</em></h1>
+        <p class="hero-sub">Checklist rooted in Salah, Sunnah, and healthy rhythm. Notes for muhasabah. A focus timer for deep work.</p>
+      </section>
+
+      <!-- Summary strip -->
+      <section class="practice-summary" aria-label="Today summary">
+        <div class="psum-card psum-progress">
+          <div class="psum-ring-wrap" aria-hidden="true">
+            <svg class="psum-ring" viewBox="0 0 72 72">
+              <circle class="psum-ring-bg" cx="36" cy="36" r="30" />
+              <circle class="psum-ring-fill" id="progressRing" cx="36" cy="36" r="30" />
+            </svg>
+            <span class="psum-ring-pct" id="checkPctLabel">0%</span>
+          </div>
+          <div>
+            <div class="psum-kicker">Daily checklist</div>
+            <div class="psum-value" id="checkCountLabel">0 / 0 done</div>
+            <div class="psum-hint" id="checkDateLabel">—</div>
+          </div>
+        </div>
+        <div class="psum-card">
+          <div class="psum-kicker"><i class="fas fa-fire" aria-hidden="true"></i> Streak</div>
+          <div class="psum-value"><span id="streakCount">0</span> days</div>
+          <div class="psum-hint">≥50% checklist complete</div>
+        </div>
+        <div class="psum-card">
+          <div class="psum-kicker"><i class="fas fa-droplet" aria-hidden="true"></i> Water</div>
+          <div class="psum-value"><span id="waterCount">0</span> / 8</div>
+          <div class="water-row" id="waterRow" role="group" aria-label="Water glasses"></div>
+        </div>
+        <div class="psum-card psum-week">
+          <div class="psum-kicker">Last 7 days</div>
+          <div class="week-heat" id="weekHeat" aria-label="Weekly completion"></div>
+        </div>
+      </section>
+
+      <div class="practice-grid">
+
+        <!-- Left column -->
+        <div class="practice-col">
+
+          <!-- Intention -->
+          <section class="panel" aria-labelledby="intentTitle">
+            <div class="panel-head">
+              <h2 id="intentTitle">Intention &amp; MIT</h2>
+              <span class="panel-sub">After Fajr · set niyyah</span>
+            </div>
+            <label class="field">
+              <span class="field-label">Today’s intention</span>
+              <input type="text" id="intentInput" class="field-input" maxlength="160"
+                placeholder="I work to provide halal and serve my family — this is ibadah" />
+            </label>
+            <label class="field">
+              <span class="field-label">Most Important Task (MIT)</span>
+              <input type="text" id="mitInput" class="field-input" maxlength="160"
+                placeholder="One concrete coding / learning / family goal" />
+            </label>
+            <label class="field">
+              <span class="field-label">One focused ibadah</span>
+              <input type="text" id="ibadahInput" class="field-input" maxlength="120"
+                placeholder="e.g. Quran half-page, morning adhkar with presence" />
+            </label>
+          </section>
+
+          <!-- Checklist -->
+          <section class="panel" aria-labelledby="checkTitle">
+            <div class="panel-head">
+              <h2 id="checkTitle">Daily checklist</h2>
+              <button type="button" class="week-btn week-btn-muted" id="resetChecksBtn" title="Clear today’s checks">
+                <i class="fas fa-rotate-left" aria-hidden="true"></i> Clear today
+              </button>
+            </div>
+            <p class="panel-lead">Cross-checked with Sunnah practice and healthy routine guidance: Salah on time, morning/evening adhkar, Quran, qaylulah, movement, moderated eating, family presence, and sleep with Sunnah.</p>
+            <div id="checklistRoot"></div>
+          </section>
+
+        </div>
+
+        <!-- Right column -->
+        <div class="practice-col">
+
+          <!-- Focus timer -->
+          <section class="panel timer-panel" aria-labelledby="timerTitle">
+            <div class="panel-head">
+              <h2 id="timerTitle">Focus timer</h2>
+              <span class="panel-sub">Pomodoro · deep work</span>
+            </div>
+            <div class="timer-display" id="timerDisplay" role="timer" aria-live="off">25:00</div>
+            <div class="timer-modes" role="tablist" aria-label="Timer mode">
+              <button type="button" class="timer-mode active" data-mins="25" role="tab" aria-selected="true">Focus 25</button>
+              <button type="button" class="timer-mode" data-mins="5" role="tab" aria-selected="false">Break 5</button>
+              <button type="button" class="timer-mode" data-mins="15" role="tab" aria-selected="false">Break 15</button>
+              <button type="button" class="timer-mode" data-mins="50" role="tab" aria-selected="false">Deep 50</button>
+            </div>
+            <div class="timer-actions">
+              <button type="button" class="week-btn week-btn-primary" id="timerStartBtn">
+                <i class="fas fa-play" aria-hidden="true"></i> Start
+              </button>
+              <button type="button" class="week-btn" id="timerPauseBtn" hidden>
+                <i class="fas fa-pause" aria-hidden="true"></i> Pause
+              </button>
+              <button type="button" class="week-btn" id="timerResetBtn">
+                <i class="fas fa-stop" aria-hidden="true"></i> Reset
+              </button>
+            </div>
+            <div class="timer-meta">
+              <span>Sessions today: <strong id="sessionCount">0</strong></span>
+              <span class="timer-hint">Use between Salah blocks · notifications off</span>
+            </div>
+          </section>
+
+          <!-- Muhasabah notes -->
+          <section class="panel" aria-labelledby="notesTitle">
+            <div class="panel-head">
+              <h2 id="notesTitle">Muhasabah notes</h2>
+              <span class="panel-sub">Evening reflection</span>
+            </div>
+            <label class="field">
+              <span class="field-label">3 gratitudes</span>
+              <textarea id="gratitudeNote" class="field-textarea" rows="3" maxlength="600"
+                placeholder="Professionally · personally · spiritually"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">1 learning</span>
+              <textarea id="learningNote" class="field-textarea" rows="2" maxlength="400"
+                placeholder="What did I understand better, improve, or realize today?"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">Tomorrow’s focus</span>
+              <textarea id="tomorrowNote" class="field-textarea" rows="2" maxlength="400"
+                placeholder="One concrete action or study goal to carry forward"></textarea>
+            </label>
+            <label class="field">
+              <span class="field-label">Free notes</span>
+              <textarea id="freeNote" class="field-textarea" rows="4" maxlength="2000"
+                placeholder="Ideas, blockers, dua, or anything worth carrying…"></textarea>
+            </label>
+            <div class="notes-save-row">
+              <span class="notes-status" id="notesStatus">Saved locally</span>
+              <button type="button" class="week-btn" id="exportNotesBtn" title="Copy today’s notes">
+                <i class="fas fa-copy" aria-hidden="true"></i> Copy
+              </button>
+            </div>
+          </section>
+
+          <!-- Sunnah quick reference -->
+          <section class="panel tip-panel" aria-labelledby="sunnahTitle">
+            <div class="panel-head">
+              <h2 id="sunnahTitle">Sunnah &amp; health anchors</h2>
+            </div>
+            <ul class="tip-list sunnah-tips">
+              <li>Plan and set intention after Fajr — early hours carry barakah.</li>
+              <li>Protect deep work between Fajr and Dhuhr; treat Salah as a reset, not an interruption.</li>
+              <li>Qaylulah: short midday nap (≈20 min) to restore afternoon focus.</li>
+              <li>Eat with Bismillah, in moderation — one-third food, drink, and air.</li>
+              <li>Movement is an amanah: walk, stretch, or strength work daily.</li>
+              <li>Maghrib closes the workday boundary; evening is for family and calm.</li>
+              <li>Before sleep: Al-Mulk, the three Quls, sleep on the right side, screens off.</li>
+              <li>Optional weekly: Surah Al-Kahf on Friday; fasting Monday &amp; Thursday.</li>
+            </ul>
+          </section>
+
+        </div>
+      </div>
+
+      <div class="info-note" role="note">
+        <i class="fas fa-circle-info" aria-hidden="true"></i>
+        <div>
+          <strong>Private &amp; local.</strong> Checklist, notes, water, and timer sessions are stored in this browser only (localStorage).
+          They reset by calendar day for checklist/water; notes stay dated so you can revisit yesterday’s muhasabah.
+          Guidance here follows common Sunnah-aligned and healthy-routine practice — use what fits your capacity; consistency over perfection.
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer-wrap">
+      <p class="footer-brand"><span aria-hidden="true">☽</span> Muslim Dev Routine</p>
+      <blockquote class="footer-hadith">
+        "Take benefit of five before five: your youth, your health, your wealth,
+        your free time, and your life before your death."
+        <cite>— Prophet Muhammad ﷺ</cite>
+      </blockquote>
+      <p class="footer-note">Built for a Muslim Software Engineer in Dhaka, Bangladesh · Aligned with Quran &amp; Sunnah</p>
+      <p class="footer-by">Developed by <a href="https://www.junaidul.pro.bd" target="_blank" rel="noopener noreferrer">Md. Junaidul Islam</a></p>
+    </div>
+  </footer>
+
+  <script src="practice.js"></script>
+</body>
+</html>

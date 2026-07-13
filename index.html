@@ -132,9 +132,24 @@
 
       <!-- Weekly rotation -->
       <section class="extra-section" aria-labelledby="weekTitle">
-        <div class="extra-header">
-          <h2 id="weekTitle">Weekly skill rotation</h2>
-          <span class="extra-sub">Post-Asr · every day</span>
+        <div class="extra-header week-header">
+          <div class="extra-header-main">
+            <h2 id="weekTitle">Weekly skill rotation</h2>
+            <span class="extra-sub">Post-Asr · every day</span>
+            <span class="week-custom-badge" id="weekCustomBadge" hidden>Custom</span>
+          </div>
+          <div class="week-actions" id="weekActions" aria-label="Weekly rotation actions">
+            <button type="button" class="week-btn" id="weekEditBtn" aria-label="Edit weekly rotation">
+              <i class="fas fa-pen" aria-hidden="true"></i> Edit
+            </button>
+            <button type="button" class="week-btn week-btn-primary" id="weekSaveBtn" hidden>
+              <i class="fas fa-check" aria-hidden="true"></i> Save
+            </button>
+            <button type="button" class="week-btn" id="weekCancelBtn" hidden>Cancel</button>
+            <button type="button" class="week-btn week-btn-muted" id="weekResetBtn" hidden title="Restore default rotation">
+              <i class="fas fa-rotate-left" aria-hidden="true"></i> Reset
+            </button>
+          </div>
         </div>
         <div class="week-grid" id="weekGrid"></div>
       </section>

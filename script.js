@@ -204,7 +204,9 @@ const state = {
 };
 
 /* ─── Weekly rotation ────────────────────────────────────── */
-const WEEKLY = [
+const WEEKLY_STORAGE_KEY = 'muslim-dev-routine-weekly';
+
+const DEFAULT_WEEKLY = [
   { day:'Monday',    cls:'',       topic:'DSA & Competitive',  desc:'Codeforces problems, algorithms, data structures, contest prep' },
   { day:'Tuesday',   cls:'',       topic:'Java & Spring Boot', desc:'Kafka, Redis, JPA internals, microservice patterns' },
   { day:'Wednesday', cls:'',       topic:'DevOps & Cloud',     desc:'Docker, Kubernetes, CI/CD, Terraform, cloud deployment' },
@@ -213,6 +215,63 @@ const WEEKLY = [
   { day:'Saturday',  cls:'wk-sat', topic:'Personal Projects',  desc:'stake-ledger, ERP builds, freelance, side products' },
   { day:'Sunday',    cls:'wk-sun', topic:'Rest & Review',      desc:'Week retrospective, plan next week, full rest' }
 ];
+
+let weeklyRotation = [];
+let weekEditMode = false;
+let weekDraft = null;
+
+function cloneWeekly(data){
+  return data.map(w=>({ day:w.day, cls:w.cls, topic:w.topic, desc:w.desc }));
+}
+
+function normalizeWeeklyEntry(entry, fallback){
+  return {
+    day: fallback.day,
+    cls: fallback.cls,
+    topic: String(entry?.topic ?? fallback.topic).trim() || fallback.topic,
+    desc: String(entry?.desc ?? fallback.desc).trim() || fallback.desc
+  };
+}
+
+function loadWeeklyRotation(){
+  try{
+    const raw=localStorage.getItem(WEEKLY_STORAGE_KEY);
+    if(!raw) return cloneWeekly(DEFAULT_WEEKLY);
+    const parsed=JSON.parse(raw);
+    if(!Array.isArray(parsed) || parsed.length!==DEFAULT_WEEKLY.length){
+      return cloneWeekly(DEFAULT_WEEKLY);
+    }
+    return DEFAULT_WEEKLY.map((def, i)=>normalizeWeeklyEntry(parsed[i], def));
+  }catch{
+    return cloneWeekly(DEFAULT_WEEKLY);
+  }
+}
+
+function hasCustomWeekly(){
+  return DEFAULT_WEEKLY.some((def, i)=>{
+    const cur=weeklyRotation[i];
+    return cur.topic!==def.topic || cur.desc!==def.desc;
+  });
+}
+
+function persistWeeklyRotation(data){
+  const payload=data.map(({ day, topic, desc })=>({ day, topic, desc }));
+  localStorage.setItem(WEEKLY_STORAGE_KEY, JSON.stringify(payload));
+  weeklyRotation=cloneWeekly(data);
+}
+
+function resetWeeklyRotation(){
+  localStorage.removeItem(WEEKLY_STORAGE_KEY);
+  weeklyRotation=cloneWeekly(DEFAULT_WEEKLY);
+}
+
+function escapeHtml(str){
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
 
 const CAT_LABEL = { s:'Salah', w:'Work', l:'Learning', h:'Wellness', f:'Personal' };
 
@@ -463,11 +522,98 @@ function renderTimeline(){
   requestAnimationFrame(()=>{ document.querySelectorAll('.block').forEach((el,i)=>setTimeout(()=>el.classList.add('in'),i*26)); });
 }
 
+function updateWeekCustomBadge(){
+  const badge=document.getElementById('weekCustomBadge');
+  if(!badge) return;
+  badge.hidden=!hasCustomWeekly();
+}
+
+function updateWeekActions(){
+  const editBtn=document.getElementById('weekEditBtn');
+  const saveBtn=document.getElementById('weekSaveBtn');
+  const cancelBtn=document.getElementById('weekCancelBtn');
+  const resetBtn=document.getElementById('weekResetBtn');
+  if(editBtn) editBtn.hidden=weekEditMode;
+  if(saveBtn) saveBtn.hidden=!weekEditMode;
+  if(cancelBtn) cancelBtn.hidden=!weekEditMode;
+  if(resetBtn) resetBtn.hidden=!weekEditMode;
+}
+
 function renderWeekGrid(){
   const el=document.getElementById('weekGrid'); if(!el) return;
-  el.innerHTML=WEEKLY.map(w=>`<div class="wk-card ${w.cls}">
-    <div class="wk-day">${w.day}</div><div class="wk-topic">${w.topic}</div>
-    <div class="wk-desc">${w.desc}</div></div>`).join('');
+  const rows=weekEditMode && weekDraft ? weekDraft : weeklyRotation;
+  el.innerHTML=rows.map((w, idx)=>`
+    <div class="wk-card ${w.cls}${weekEditMode?' wk-card-edit':''}" data-idx="${idx}">
+      <div class="wk-day">${w.day}</div>
+      ${weekEditMode ? `
+        <label class="wk-field">
+          <span class="wk-field-label">Topic</span>
+          <input class="wk-input" type="text" value="${escapeHtml(w.topic)}"
+            data-field="topic" maxlength="80" aria-label="${w.day} topic">
+        </label>
+        <label class="wk-field">
+          <span class="wk-field-label">Focus</span>
+          <textarea class="wk-textarea" rows="3" data-field="desc" maxlength="220"
+            aria-label="${w.day} focus">${escapeHtml(w.desc)}</textarea>
+        </label>
+      ` : `
+        <div class="wk-topic">${escapeHtml(w.topic)}</div>
+        <div class="wk-desc">${escapeHtml(w.desc)}</div>
+      `}
+    </div>`).join('');
+
+  if(weekEditMode){
+    el.querySelectorAll('[data-field]').forEach(input=>{
+      input.addEventListener('input',()=>{
+        const card=input.closest('.wk-card');
+        const i=parseInt(card?.dataset.idx ?? '-1', 10);
+        const field=input.dataset.field;
+        if(!weekDraft || i < 0 || !field) return;
+        weekDraft[i][field]=input.value;
+      });
+    });
+  }
+}
+
+function enterWeekEdit(){
+  weekEditMode=true;
+  weekDraft=cloneWeekly(weeklyRotation);
+  renderWeekGrid();
+  updateWeekActions();
+  document.getElementById('weekEditBtn')?.blur();
+}
+
+function cancelWeekEdit(){
+  weekEditMode=false;
+  weekDraft=null;
+  renderWeekGrid();
+  updateWeekActions();
+}
+
+function saveWeekEdit(){
+  if(!weekDraft) return;
+  const normalized=DEFAULT_WEEKLY.map((def, i)=>normalizeWeeklyEntry(weekDraft[i], def));
+  persistWeeklyRotation(normalized);
+  weekEditMode=false;
+  weekDraft=null;
+  renderWeekGrid();
+  updateWeekActions();
+  updateWeekCustomBadge();
+}
+
+function resetWeekToDefault(){
+  if(!confirm('Reset weekly rotation to the default plan? Your custom topics will be removed.')) return;
+  resetWeeklyRotation();
+  if(weekEditMode) weekDraft=cloneWeekly(weeklyRotation);
+  renderWeekGrid();
+  updateWeekCustomBadge();
+}
+
+function initWeekControls(){
+  document.getElementById('weekEditBtn')?.addEventListener('click', enterWeekEdit);
+  document.getElementById('weekSaveBtn')?.addEventListener('click', saveWeekEdit);
+  document.getElementById('weekCancelBtn')?.addEventListener('click', cancelWeekEdit);
+  document.getElementById('weekResetBtn')?.addEventListener('click', resetWeekToDefault);
 }
 
 function updateClock(){
@@ -537,7 +683,11 @@ function initFilters(){
 
 /* ─── Init ───────────────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded',()=>{
+  weeklyRotation=loadWeeklyRotation();
   renderWeekGrid();
+  updateWeekCustomBadge();
+  updateWeekActions();
+  initWeekControls();
   rerenderAll();
   updateClock();
   tickCountdown();

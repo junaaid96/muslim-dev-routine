@@ -278,6 +278,20 @@ em{font-style:italic}
 .extra-header h2{font-family:var(--ff-h);font-size:var(--fs-h2);font-weight:600;
   letter-spacing:-.01em;color:var(--t1)}
 .extra-sub{font-family:var(--ff-m);font-size:var(--fs-2xs);letter-spacing:.04em;color:var(--t3)}
+.week-header{align-items:center;justify-content:space-between}
+.extra-header-main{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap}
+.week-custom-badge{font-family:var(--ff-m);font-size:var(--fs-2xs);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--cl);background:var(--cl-a);border:1px solid var(--cl-b);
+  border-radius:999px;padding:.2rem .55rem}
+.week-actions{display:flex;align-items:center;gap:.45rem;flex-wrap:wrap}
+.week-btn{display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .85rem;border-radius:8px;
+  font-size:var(--fs-xs);font-weight:500;color:var(--t2);background:var(--s1);
+  border:1px solid var(--bdr);transition:all .18s;white-space:nowrap}
+.week-btn:hover{color:var(--t1);background:var(--s2);border-color:var(--bdrh)}
+.week-btn-primary{color:var(--cs);background:var(--cs-a);border-color:var(--cs-b)}
+.week-btn-primary:hover{color:var(--cs);background:rgba(52,224,168,.18)}
+.week-btn-muted{color:var(--t3)}
+.week-btn-muted:hover{color:var(--ch);border-color:rgba(255,194,77,.35)}
 
 /* Weekly grid */
 .week-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.75rem}
@@ -289,6 +303,14 @@ em{font-style:italic}
 .wk-topic{font-family:var(--ff-h);font-size:var(--fs-md);font-weight:600;color:var(--t1);
   margin-bottom:.3rem;line-height:1.3}
 .wk-desc{font-size:var(--fs-xs);color:var(--t2);line-height:1.5}
+.wk-card-edit:hover{transform:none}
+.wk-field{display:block;margin-top:.55rem}
+.wk-field-label{display:block;font-family:var(--ff-m);font-size:var(--fs-2xs);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--t3);margin-bottom:.3rem}
+.wk-input,.wk-textarea{width:100%;background:var(--s2);color:var(--t1);border:1px solid var(--bdr);
+  border-radius:8px;padding:.5rem .65rem;font-family:var(--ff-b);font-size:var(--fs-xs);
+  line-height:1.45;transition:border-color .18s;resize:vertical}
+.wk-input:focus,.wk-textarea:focus{outline:none;border-color:var(--cl-b)}
 .wk-fri .wk-day,.wk-fri .wk-topic{color:var(--cs)}
 .wk-sat .wk-day,.wk-sat .wk-topic{color:var(--cw)}
 .wk-sun .wk-day,.wk-sun .wk-topic{color:var(--ch)}
@@ -354,6 +376,8 @@ em{font-style:italic}
   .habit-arrow{display:none}
   .habit-card{min-width:calc(50% - .4rem);flex:none}
   .extra-header{flex-direction:column;gap:.2rem}
+  .week-header{align-items:flex-start}
+  .week-actions{width:100%}
   .week-grid{grid-template-columns:1fr}
 }
 @media (max-width:400px){
